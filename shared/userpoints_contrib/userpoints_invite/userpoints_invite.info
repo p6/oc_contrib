@@ -1,0 +1,14 @@
+name = Userpoints Invite
+description = Users earn points when they invite other, and when others register.
+package = Userpoints
+dependencies[] = userpoints
+dependencies[] = invite
+core = 7.x
+configure = admin/config/people/userpoints/settings
+
+; Information added by drupal.org packaging script on 2011-07-08
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "userpoints_contrib"
+datestamp = "1310085871"
+

@@ -1,0 +1,262 @@
+<?php
+/**
+ * Implements hook_features_api().
+ */
+function og_features_api() {
+  return array(
+    'og_features_role' => array(
+      'name' => t('OG Role'),
+      'feature source' => TRUE,
+      'default_hook' => 'og_default_roles',
+      'default_file' => FEATURES_DEFAULTS_INCLUDED,
+    ),
+    'og_features_permission' => array(
+      'name' => t('OG Permissions'),
+      'feature_source' => TRUE,
+      'default_hook' => 'og_default_permissions',
+      'default_file' => FEATURES_DEFAULTS_INCLUDED,
+    ),
+  );
+}
+
+/**
+ * Implements hook_features_export().
+ */
+function og_features_permission_features_export($data, &$export, $module_name = '') {
+ $export['dependencies']['features'] = 'features';
+  $export['dependencies']['og'] = 'og';
+
+  $permissions = og_get_permissions();
+  foreach($data as $perm) {
+    if (isset($permissions[$perm]['module'])) {
+      $module = $permissions[$perm]['module'];
+      $export['dependencies'][$module] = $module;
+      $export['features']['og_features_permission'][$perm] = $perm;
+    }
+  }
+
+  return array();
+}
+
+/**
+ * Implements hook_features_export_options().
+ */
+function og_features_permission_features_export_options() {
+  $modules = array();
+  $module_info = system_get_info('module');
+  $permissions = og_get_permissions();
+
+  $options = array();
+  foreach($permissions as $perm => $details) {
+    $options[$perm] = strip_tags($module_info[$details['module']]['name'] .  ': ' . $details['title']);
+  }
+
+  return $options;
+}
+
+/**
+ * Implements hook_Features_export_render().
+*/
+function og_features_permission_features_export_render($module, $data) {
+  $code = array();
+  $code[] = '  $permissions = array();';
+  $code[] = '';
+
+  $permissions = _og_features_permission_permissions_map();
+
+  foreach($data as $perm_name) {
+    $permission = array();
+    $permission['name'] = $perm_name;
+    if (isset($permissions[$perm_name])) {
+      $permission['roles'] = $permissions[$perm_name]['roles'];
+      $permission['module'] = $permissions[$perm_name]['module'];
+    }
+    $perm_identifier = features_var_export($perm_name);
+    $perm_export = features_var_export($permission, '  ');
+    $code[] = "  // Exported og permission: {$perm_name}";
+   $code[] = "  \$permissions[{$perm_identifier}] = {$perm_export};";
+    $code[] = '';
+  }
+  $code[] = '  return $permissions;';
+
+  $code = implode("\n", $code);
+  return (array('og_default_permissions' => $code));
+}
+
+/**
+ * Implements hook_features_revert().
+ */
+function og_features_permission_features_revert($module) {
+  og_features_permission_features_rebuild($module);
+}
+
+/**
+ * Implements hook_features_reqbuild().
+ * Iterates through default permissions and update the permissions map.
+ *
+* @param $module
+ *  The modules whose default user permissions should be rebuild.
+ */
+function og_features_permission_features_rebuild($module) {
+  $roles = _og_features_get_roles();
+  $rmap = array_flip($roles);
+  if ($defaults = features_get_default('og_features_permission', $module)) {
+    $grant = array();
+    $revoke = array();
+    foreach($defaults as $perm => $details) {
+      foreach ($roles as $rolename) {
+        if (!empty($rmap[$rolename])) {
+          if (in_array($rolename, $details['roles'])) {
+            $grant[$rmap[$rolename]][] = $perm;
+          }
+          else {
+            $revoke[$rmap[$rolename]][] = $perm;
+          }
+        }
+      }
+    }
+
+    if (!empty($grant)) {
+      foreach($grant as $rid => $permissions) {
+        og_role_grant_permissions($rid, $permissions);
+      }
+    }
+
+    if (!empty($revoke)) {
+      foreach($revoke as $rid => $permissions) {
+        og_role_revoke_permissions($rid, $permissions);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_features_export().
+ */
+function og_features_role_features_export($data, &$export, $module_name = '') {
+  $export['dependencies']['features'] = 'features';
+  $export['dependencies']['og'] = 'og';
+
+ $map = features_get_default_map('og_role', 'name');
+
+  foreach($data as $role) {
+    if (isset($map[$role]) && $map[$role] != $module_name) {
+      $export['dependencies'][$map[$role]] = $map[$role];
+    }
+    elseif($data = _og_features_get_role_by_name($role)) {
+      $export['features']['og_features_role'][$role] = $role;
+    }
+  }
+  return array();
+}
+
+/**
+ * Implmements hook_features_export_options().
+ */
+function og_features_role_features_export_options() {
+  return drupal_map_assoc(_og_features_get_roles(FALSE));
+}
+
+/**
+ * Implements hook_features_export_render().
+ */
+function og_features_role_features_export_render($module, $data) {
+  $code = array();
+  $code[] = '  $roles = array();';
+  $code[] = '';
+
+  foreach($data as $name) {
+    if ($role = _og_features_get_role_by_name($name)) {
+     unset($role->rid);
+      $role_identifier = features_var_export($name);
+      $role_export = features_var_export($role, '  ');
+      $code[] = "  // Exported role: {$name}";
+      $code[] = "  \$roles[{$role_identifier}] = {$role_export};";
+      $code[] = "";
+    }
+  }
+
+  $code[] = '  return $roles;';
+  $code = implode("\n", $code);
+  return array('og_default_roles' => $code);
+}
+
+/**
+ * Implements hook_features_revert
+ */
+function og_features_role_features_revert($module) {
+  og_features_role_features_rebuild($module);
+}
+
+/**
+ * Implements hook_features_rebuild()
+ */
+function og_features_role_features_rebuild($module) {
+  if ($defaults = features_get_default('og_features_role', $module)) {
+    foreach($defaults as $role) {
+      $role = (object) $role;
+      if ($existing = _og_features_get_role_by_name($role->name)) {
+        $role->rid = $existing->rid;
+      }
+      og_role_save($role);
+    }
+  }
+}
+
+/**
+ * Helper function to flip role/perm map
+ */
+function _og_features_permission_permissions_map() {
+  $perms = og_get_global_permissions();
+  $roles = _og_features_get_roles();
+ $permissions = og_get_permissions();
+  $map = array();
+  foreach($permissions as $perm => $details) {
+   $map[$perm] = array(
+      'module' => $details['module'],
+      'roles' => array(),
+    );
+    foreach($perms as $rid => $rperms) {
+      if (!empty($rperms[$perm])) {
+        $map[$perm]['roles'][] = $roles[$rid];
+      }
+    }
+
+    sort($map[$perm]['roles']);
+  }
+
+  return $map;
+}
+/**
+* Generate $rid => $role with role names untranslated
+ */
+function _og_features_get_roles($builtin = TRUE) {
+  $roles = array();
+  foreach(og_get_global_roles() as $rid => $name) {
+    switch ($name) {
+      case OG_ANONYMOUS_ROLE:
+      case OG_AUTHENTICATED_ROLE:
+      case OG_ADMINISTRATOR_ROLE:
+        if ($builtin) {
+          $roles[$rid] = $name;
+        }
+        break;
+      default:
+        $roles[$rid] = $name;
+        break;
+    }
+  }
+  return $roles;
+}
+
+/**
+ * Get a user role by name
+ */
+function _og_features_get_role_by_name($name) {
+  return db_select('og_role', 'r')
+  ->fields('r')
+  ->condition('name', $name)
+  ->condition('gid', 0)
+  ->execute()
+  ->fetchObject();
+}
