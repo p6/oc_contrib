@@ -1,0 +1,25 @@
+{
+  "name": "oc contrib",
+  "description": "Main composer.json for oc",
+  "version": "1.0.0",
+  "repositories": {
+    "drupal": {
+      "type": "composer",
+      "url": "https://packages.drupal.org/7"
+    }
+  },
+  "require": {
+    "composer/installers": "~1.0",
+    "drupal/me": "1.2.0",
+    "drupal/acl": "1.1.0",
+    "drupal/dbee": "2.5.0",
+    "drupal/custom_formatters": "2.4.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "installer-paths": {
+      "shared": ["type:drupal-module"]
+    }
+  }
+}
