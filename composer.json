@@ -1,7 +1,7 @@
 {
-  "name": "oc contrib",
+  "name": "gauravjeet/oc-contrib",
   "description": "Main composer.json for oc",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repositories": {
     "drupal": {
       "type": "composer",
