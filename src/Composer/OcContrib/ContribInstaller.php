@@ -11,7 +11,8 @@ class ContribInstaller extends LibraryInstaller {
    * {@inheritDoc}
    */
   public function getInstallPath(PackageInterface $package) {
-    $prefix = substr($package->getPrettyName(), 0, 23);
+    return 'gjsingh/';
+//    $prefix = substr($package->getPrettyName(), 0, 23);
 //    if ('/template-' !== $prefix) {
 //      throw new \InvalidArgumentException(
 //        'Unable to install template, phpdocumentor templates '
@@ -19,9 +20,7 @@ class ContribInstaller extends LibraryInstaller {
 //        .'"phpdocumentor/template-"'
 //      );
 //    }
-
-    print_r($package->getPrettyName());die;
-    return 'gjsingh/' . substr($package->getPrettyName(), 23);
+//    return 'gjsingh/' . substr($package->getPrettyName(), 23);
   }
 
   /**
