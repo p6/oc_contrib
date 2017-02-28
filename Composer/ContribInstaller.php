@@ -11,8 +11,6 @@ class ContribInstaller extends LibraryInstaller {
    * {@inheritDoc}
    */
   public function getInstallPath(PackageInterface $package) {
-
-    echo 'herre';die;
     $prefix = substr($package->getPrettyName(), 0, 23);
 //    if ('/template-' !== $prefix) {
 //      throw new \InvalidArgumentException(
@@ -22,7 +20,7 @@ class ContribInstaller extends LibraryInstaller {
 //      );
 //    }
 
-    return 'data/templates/' . substr($package->getPrettyName(), 23);
+    return 'gjsingh/' . substr($package->getPrettyName(), 23);
   }
 
   /**
