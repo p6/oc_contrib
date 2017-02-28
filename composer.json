@@ -1,7 +1,7 @@
 {
   "name": "gauravjeet/oc-contrib-plugin",
   "description": "OC repo for contrib modules",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "type": "composer-plugin",
   "autoload": {
     "psr-4": {"Composer\\OcContrib\\": "src/Composer/OcContrib"}
