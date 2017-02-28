@@ -1,7 +1,7 @@
 {
   "name": "gauravjeet/oc-contrib",
   "description": "OC repo for contrib modules",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "project",
   "require": {
     "composer/installers": "~1.0"
