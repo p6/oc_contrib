@@ -7,7 +7,7 @@
     "psr-0": {"ocContrib\\Composer": "src/"}
   },
   "extra": {
-    "class": "ocContrib\\Composer\\ContribInstallerPlugin"
+    "class": "oc-contrib\\Composer\\ContribInstallerPlugin"
   },
   "require": {
     "composer-plugin-api": "^1.0"

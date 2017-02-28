@@ -1,6 +1,6 @@
 <?php
 
-namespace ocContrib\Composer;
+namespace oc_contrib\Composer;
 
 use Composer\Package\PackageInterface;
 use Composer\Installer\LibraryInstaller;
