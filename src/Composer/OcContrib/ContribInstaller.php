@@ -19,7 +19,8 @@ class ContribInstaller extends LibraryInstaller {
 //        .'"phpdocumentor/template-"'
 //      );
 //    }
-echo 'gjsingh -- ' . $package->getPrettyName();
+
+    print_r($package->getPrettyName());die;
     return 'gjsingh/' . substr($package->getPrettyName(), 23);
   }
 
@@ -27,6 +28,6 @@ echo 'gjsingh -- ' . $package->getPrettyName();
    * {@inheritDoc}
    */
   public function supports($packageType) {
-    return 'oc-contrib-plugin' === $packageType;
+    return 'thissssss';//'oc-contrib-plugin' === $packageType;
   }
 }
