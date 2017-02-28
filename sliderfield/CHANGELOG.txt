@@ -1,2 +1,0 @@
-10/29/2011 - Sliderfield adjustable widget.
-08/03/2011 - 7.x-1.x - Initial creation.
