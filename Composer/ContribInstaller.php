@@ -19,7 +19,7 @@ class ContribInstaller extends LibraryInstaller {
 //        .'"phpdocumentor/template-"'
 //      );
 //    }
-
+echo 'gjsingh -- ' . $package->getPrettyName();
     return 'gjsingh/' . substr($package->getPrettyName(), 23);
   }
 
