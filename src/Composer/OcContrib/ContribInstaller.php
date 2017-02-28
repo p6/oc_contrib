@@ -18,7 +18,6 @@ class ContribInstaller extends LibraryInstaller {
    * {@inheritDoc}
    */
   public function supports($packageType) {
-    return 'some-type';
-//    return 'project' === $packageType;
+    return 'oc-contrib-plugin' === $packageType;
   }
 }
