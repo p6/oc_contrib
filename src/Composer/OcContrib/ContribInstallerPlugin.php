@@ -1,5 +1,5 @@
 <?php
-namespace oc_contrib\Composer;
+namespace Composer\OcContrib;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;

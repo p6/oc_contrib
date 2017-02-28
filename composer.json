@@ -1,13 +1,13 @@
 {
   "name": "gauravjeet/oc-contrib-plugin",
   "description": "OC repo for contrib modules",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "type": "composer-plugin",
   "autoload": {
-    "psr-4": {"oc_contrib\\Composer\\": "src/"}
+    "psr-4": {"Composer\\OcContrib\\": "src/ComposerOcContrib"}
   },
   "extra": {
-    "class": "oc_contrib\\Composer\\ContribInstallerPlugin"
+    "class": "Composer\\OcContrib\\ContribInstallerPlugin"
   },
   "require": {
     "composer-plugin-api": "^1.0"
