@@ -11,13 +11,14 @@ class ContribInstaller extends LibraryInstaller {
    * {@inheritDoc}
    */
   public function getInstallPath(PackageInterface $package) {
-    return 'gjsingh/';
+    return 'gjsingh';
   }
 
   /**
    * {@inheritDoc}
    */
   public function supports($packageType) {
-    return 'project' === $packageType;
+    return 'some-type';
+//    return 'project' === $packageType;
   }
 }
