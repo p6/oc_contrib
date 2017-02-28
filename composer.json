@@ -4,7 +4,7 @@
   "version": "1.0.12",
   "type": "composer-plugin",
   "autoload": {
-    "psr-0": {"oc_contrib\\Composer": "src/"}
+    "psr-4": {"oc_contrib\\Composer\\": "src/"}
   },
   "extra": {
     "class": "oc_contrib\\Composer\\ContribInstallerPlugin"
