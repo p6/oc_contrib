@@ -1,0 +1,28 @@
+.project
+
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Phpstorm
+.idea
+
+# Node packages
+node_modules
+
+# Encryption keys
+keys
+
+# OS X folder icon (includes \r\r at end)
+Icon
+
+# ignore codeception files
+tests/_output
+
+#vim
+*.swp
+*.swo
